@@ -1,3 +1,4 @@
 JPype1
 konlpy
 pandas
+emosent-py
