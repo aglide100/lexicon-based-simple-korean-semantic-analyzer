@@ -41,10 +41,13 @@ class Analyzer:
             # print(chunk)  
             check = check_emoji(chunk)
             if check == True:
-                # print(chunk)
                 try:
-                    out = emoji_sentiment(chunk)
-                    print("emoji score: ",out)
+                    out = get_emoji_sentiment_rank(chunk)
+
+                    scores['POS'] += out["positive"] / out["occurrences"]
+                    scores['NEG'] += out["negative"] / out["occurrences"]
+                    scores['NEUT'] += out["neutral"] / out["occurrences"]
+                    # scores['NEUT'] += out["neutral"]
                 except KeyError:
                     print("No sentiment data") 
             else:
@@ -54,9 +57,13 @@ class Analyzer:
             
         return Analyzer.scores_to_percentiles(scores)
 
+    def calc_scores(scores):
+        return scores['POS'] / ()
+
     def scores_to_percentiles(scores):
         sum_of_scores = sum(scores.values())
         if sum_of_scores == 0:
+            # may be error... cause can't get score from n-gram
             return {'POS': 0, 'NEG': 0, 'NEUT': 0, 'COMP': 0, 'None': 1}
 
         for category in scores:
@@ -87,6 +94,14 @@ class Analyzer:
 
         return analyzed_words
     
+    def analyze_word(sentence):
+        lexicon_dictionary = pd.read_csv('lexicon/polarity.csv')
+
+        word_chunks = Analyzer.analyze_sentences_into_chunks(sentence)
+        categorized_scores = Analyzer.get_score_from_chunks(word_chunks, lexicon_dictionary)
+        
+        print(categorized_scores)
+
     def analyze_from_array(sentences):
         lexicon_dictionary = pd.read_csv('lexicon/polarity.csv')
 
