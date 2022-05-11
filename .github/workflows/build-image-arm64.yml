@@ -24,7 +24,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: ./Arm64.Dockerfile
+          context: .
+          file: ./Arm64.Dockerfile
           platforms: linux/arm64
           push: true
           tags: ghcr.io/aglide100/lexicon-based-simple-korean-semantic-analyzer:latest
