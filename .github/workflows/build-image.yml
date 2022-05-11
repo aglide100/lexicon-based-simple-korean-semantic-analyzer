@@ -1,4 +1,4 @@
-name: build-image-arm64
+name: build-image
 
 on:
   push:
@@ -7,6 +7,11 @@ on:
 
 jobs:
   buildImage:
+    strategy:
+      matrix:
+        platform: [linux/amd64, linux/arm64]
+        path: [./Dockerfile, ./Arm64.Dockerfile]
+
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -25,7 +30,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./Arm64.Dockerfile
-          platforms: linux/arm64
+          file: ${{ matrix.path }}
+          platforms: ${{ matrix.platform }}
           push: true
           tags: ghcr.io/aglide100/lexicon-based-simple-korean-semantic-analyzer:latest

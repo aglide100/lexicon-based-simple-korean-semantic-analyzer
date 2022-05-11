@@ -17,19 +17,19 @@ RUN set -xe \
     build-essential \
     git
 
+RUN apt-get clean
 # should be python vesion is 3.6....
 RUN curl https://bootstrap.pypa.io/pip/3.6/get-pip.py -o get-pip.py
 
-RUN python3 get-pip.py
-
-RUN pip install --upgrade pip
-
 COPY requirements.txt ${HOME}
 
-RUN pip install -r requirements.txt
+RUN python3 get-pip.py \
+    && pip install --upgrade pip \
+    && pip install -r requirements.txt
 
-RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 2
-RUN update-alternatives --config python3
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 2 \
+    && update-alternatives --config python3
+
 RUN cd ${HOME} && \
     curl -s https://raw.githubusercontent.com/konlpy/konlpy/master/scripts/mecab.sh | bash -s
 

@@ -1,58 +1,65 @@
 import pandas as pd
-from konlpy.tag import Mecab
-# import MeCab
-# from eunjeon import Mecab
+# from konlpy.tag import Mecab
+from konlpy.tag import Kkma
 from emosent import *
 import re
-import os
+import emoji
 
 def emoji_sentiment(text):
-    
     return get_emoji_sentiment_rank(text)["sentiment_score"]
 
-def check_emoji(str):
-    # print(str)
-    # emoji_pattern = re.compile("["
-    #     u"\U0001F600-\U0001F64F"  # emoticons
-    #     u"\U0001F300-\U0001F5FF"  # symbols & pictographs
-    #     u"\U0001F680-\U0001F6FF"  # transport & map symbols
-    #     u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
-    #                        "]+", flags=re.UNICODE) 
+# def check_emoji(str):
+#     emoji_pattern = re.compile("["
+#         u"\U00010000-\U0010FFFF"  #BMP characters 이외
+#                            "]+", flags=re.UNICODE)
+#     emojiCheck = emoji_pattern.findall(str)
 
-    emoji_pattern = re.compile("["
-        u"\U00010000-\U0010FFFF"  #BMP characters 이외
-                           "]+", flags=re.UNICODE)
-    emojiCheck = emoji_pattern.findall(str)
-
-    # print(emojiCheck)
-    if len(emojiCheck) >= 1:
-        # print("!")
-        return True
-    else:
-        return False
+#     if len(emojiCheck) >= 1:
+#         # print("!")
+#         return True
+#     else:
+#         return False
 
 class Analyzer:
     def preprocessing(text):
         # print(text)
-        text = text.rstrip().lstrip()
-        return re.sub('[/[\{\}\[\]\/?|\)*~`!\-_+<>@\#$%&\\\=\(\'\"]+', '', text)
+        
+        text = re.sub('[/[\{\}\[\]\/?|\)*~`!\-_+<>@\#$%&\\\=\(\'\"]+', '', text)
+        
+        text = re.sub(r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", '', text) # http로 시작되는 url
+        text = re.sub(r"[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{2,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)", '', text) # http로 시작되지 않는 url
+    #     pattern = '(http|ftp|https)://(?:[-\w.]|(?:\da-fa-F]{2}))+'
+    #     text = re.sub(pattern = pattern, repl = ' ',string=text)
+        # text = re.sub('[#]+[0-9a-zA-Z_]+', ' ', text)
+        # text = text.replace('\n',' ')
+        text = re.sub('[a-zA-Z]' , ' ', text)
+        # text = text.rstrip().lstrip()
+        text = ' '.join(text.split())
+        # print(text)
+       
+
+        return emoji.demojize(text)
 
     def get_score_from_chunks(chunks, lexicons):
         scores = {'POS': 0, 'NEG': 0, 'NEUT': 0, 'COMP': 0, 'None': 0}
 
         for chunk in chunks:
-            # print(chunk)  
-            check = check_emoji(chunk)
-            if check == True:
-                try:
-                    out = get_emoji_sentiment_rank(chunk)
+            print(chunk)  
+            if chunk.isspace():
+                print("공백")
+                print(chunk)
+                continue
 
+            if chunk.startswith(":") and chunk.endswith(":"):
+                try:
+                    out = get_emoji_sentiment_rank(emoji.emojize(chunk))
+                    
                     scores['POS'] += out["positive"] / out["occurrences"]
                     scores['NEG'] += out["negative"] / out["occurrences"]
                     scores['NEUT'] += out["neutral"] / out["occurrences"]
                     # scores['NEUT'] += out["neutral"]
                 except KeyError:
-                    print("No sentiment data") 
+                    pass 
             else:
                 for index, row in lexicons.iterrows():
                     if row['ngram'] in chunk:
@@ -75,19 +82,20 @@ class Analyzer:
         return scores
 
     def analyze_sentences_into_chunks(sentences):
-        # kkma = Kkma()
-        m = Mecab()
+        m = Kkma()
+        # m = Mecab()
         
         analyzed_words = []
 
         for str in sentences:
-            check = check_emoji(str)
+            str = Analyzer.preprocessing(str)
+            # if str.isspace():
+            #     continue
 
-            if check == True:
+            if len(str) > 2:
                 analyzed_words.append(str)
                 continue
-            
-            str = Analyzer.preprocessing(str)
+
             # analyzed_str = kkma.pos(str)
             analyzed_str = m.pos(str)
             tmp_arr = []
@@ -107,11 +115,13 @@ class Analyzer:
         print(categorized_scores)
 
     def analyze_from_array(sentences):
+        print("형태소 분석!")
         lexicon_dictionary = pd.read_csv('lexicon/polarity.csv')
 
         for str in sentences:
             word_chunks = Analyzer.analyze_sentences_into_chunks(str)
             categorized_scores = Analyzer.get_score_from_chunks(word_chunks, lexicon_dictionary)
-            # print(str)
+            print(str)
+            print("/")
             print(categorized_scores)
         return 

@@ -67,7 +67,7 @@ install_mecab_ko(){
     curl -LO https://bitbucket.org/eunjeon/mecab-ko/downloads/mecab-0.996-ko-0.9.2.tar.gz
     tar zxfv mecab-0.996-ko-0.9.2.tar.gz
     cd mecab-0.996-ko-0.9.2
-    ./configure--build=aarch64-unknown-linux-gnu
+    ./configure --build=aarch64-unknown-linux-gnu
     make
     make check
     $sudo make install
@@ -95,7 +95,7 @@ install_automake(){
 
             # configure, make, install --prefix=/usr/local
             cd autoconf*
-            ./configure--build=aarch64-unknown-linux-gnu
+            ./configure --build=aarch64-unknown-linux-gnu
             make
             $sudo make install
 
@@ -115,7 +115,7 @@ install_automake(){
 
             # configure, make, install --prefix=/usr/local
             cd automake-1.11
-            ./configure--build=aarch64-unknown-linux-gnu
+            ./configure --build=aarch64-unknown-linux-gnu
             make
             $sudo make install
 
@@ -140,7 +140,7 @@ install_mecab_ko_dic(){
     tar -zxvf mecab-ko-dic-2.1.1-20180720.tar.gz
     cd mecab-ko-dic-2.1.1-20180720
     ./autogen.sh
-    ./configure--build=aarch64-unknown-linux-gnu
+    ./configure --build=aarch64-unknown-linux-gnu
     if [[ $os == "Linux" ]]; then
         mecab-config --libs-only-L | $sudo tee /etc/ld.so.conf.d/mecab.conf  # XXX: Resolve #271, #182, #133
         $sudo ldconfig
