@@ -1,8 +1,6 @@
 from Data import Manager
 from Lexicon import Analyzer
 
-
-
 try:
     file = open("./db/data.db", "rw")
 except FileNotFoundError:

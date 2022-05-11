@@ -1,12 +1,45 @@
-FROM python
+FROM ubuntu:18.04
 
-COPY . /
+ARG DEBIAN_FRONTEND=noninteractive
+ENV HOME .
 
-WORKDIR /
+WORKDIR ${HOME}
 
-RUN python3 -m pip install --upgrade pip
-RUN python3 -m pip install -r requirements.txt
+RUN set -xe \
+    && apt-get update \
+    && apt-get install -y python3.6 \ 
+    python-dev \
+    python3-dev \
+    python3-distutils \
+    curl \
+    python3-setuptools \
+    default-jdk default-jre \
+    build-essential \
+    git
 
-RUN apt update && apt install -y default-jre
+# should be python vesion is 3.6....
+RUN curl https://bootstrap.pypa.io/pip/3.6/get-pip.py -o get-pip.py
 
-ENTRYPOINT ["python3", "Main.py"]
+RUN python3 get-pip.py
+
+RUN pip install --upgrade pip
+
+COPY requirements.txt ${HOME}
+
+RUN pip install -r requirements.txt
+
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 2
+RUN update-alternatives --config python3
+RUN cd ${HOME} && \
+    curl -s https://raw.githubusercontent.com/konlpy/konlpy/master/scripts/mecab.sh | bash -s
+
+RUN export LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
+ENV LANGUAGE=C.UTF-8
+
+COPY . ${HOME}/code
+
+WORKDIR ${HOME}/code
+
+ENTRYPOINT ["python3", "Main.py"] 
+# CMD ["python3 Main.py"]

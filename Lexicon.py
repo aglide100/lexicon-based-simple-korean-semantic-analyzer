@@ -1,7 +1,10 @@
 import pandas as pd
-from konlpy.tag import Kkma
+from konlpy.tag import Mecab
+# import MeCab
+# from eunjeon import Mecab
 from emosent import *
 import re
+import os
 
 def emoji_sentiment(text):
     
@@ -72,20 +75,21 @@ class Analyzer:
         return scores
 
     def analyze_sentences_into_chunks(sentences):
-        kkma = Kkma()
+        # kkma = Kkma()
+        m = Mecab()
+        
         analyzed_words = []
 
         for str in sentences:
-            # print("1.",str)
             check = check_emoji(str)
 
             if check == True:
                 analyzed_words.append(str)
-                # print("2.",str)
                 continue
             
             str = Analyzer.preprocessing(str)
-            analyzed_str = kkma.pos(str)
+            # analyzed_str = kkma.pos(str)
+            analyzed_str = m.pos(str)
             tmp_arr = []
 
             for word in analyzed_str:
