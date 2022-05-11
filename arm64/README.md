@@ -1,0 +1,3 @@
+https://github.com/konlpy/konlpy
+
+just modify configure option...
