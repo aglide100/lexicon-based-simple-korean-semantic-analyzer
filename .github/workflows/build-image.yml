@@ -7,10 +7,10 @@ on:
 
 jobs:
   buildImage:
-    strategy:
-      matrix:
-        platform: [linux/amd64, linux/arm64]
-        # path: [./Dockerfile, ./Arm64.Dockerfile]
+    # strategy:
+    #   matrix:
+    #     platform: [linux/amd64, linux/arm64]
+    # path: [./Dockerfile, ./Arm64.Dockerfile]
 
     runs-on: ubuntu-latest
     steps:
@@ -31,6 +31,6 @@ jobs:
         with:
           context: .
           # file: ${{ matrix.path }}
-          platforms: ${{ matrix.platform }}
+          platforms: linux/amd64, linux/arm64
           push: true
           tags: ghcr.io/aglide100/lexicon-based-simple-korean-semantic-analyzer:latest
