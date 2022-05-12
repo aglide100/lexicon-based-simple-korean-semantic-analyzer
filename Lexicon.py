@@ -25,7 +25,6 @@ class Analyzer:
         text = ' '.join(text.split())
         # print(text)
        
-
         return emoji.demojize(text)
 
     def get_score_from_chunks(chunks, lexicons):

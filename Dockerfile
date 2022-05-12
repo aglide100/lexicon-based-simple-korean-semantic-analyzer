@@ -12,6 +12,8 @@ RUN mkdir -p /tmp
 RUN pip install --upgrade pip 
 # RUN conda install -c conda-forge mecab-ko
 
+RUN ./cythonized.sh && apt-get clean
+
 RUN pip install --upgrade pip \
     && pip install -r requirements.txt
 
