@@ -21,5 +21,4 @@ RUN python3 build_script.py build_ext --inplace
 
 RUN mv Lexicon.py LexiconPy.py && apt-get clean
 
-
 ENTRYPOINT ["python3", "Main.py"]
