@@ -8,18 +8,6 @@ import emoji
 def emoji_sentiment(text):
     return get_emoji_sentiment_rank(text)["sentiment_score"]
 
-# def check_emoji(str):
-#     emoji_pattern = re.compile("["
-#         u"\U00010000-\U0010FFFF"  #BMP characters 이외
-#                            "]+", flags=re.UNICODE)
-#     emojiCheck = emoji_pattern.findall(str)
-
-#     if len(emojiCheck) >= 1:
-#         # print("!")
-#         return True
-#     else:
-#         return False
-
 class Analyzer:
     def preprocessing(text):
         # print(text)
