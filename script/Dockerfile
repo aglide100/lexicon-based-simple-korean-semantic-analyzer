@@ -16,7 +16,6 @@ RUN pip install --upgrade pip \
 
 RUN pip install pip-tools
 
-
 RUN python3 build_script.py build_ext --inplace
 
 RUN mv Lexicon.py LexiconPy.py && apt-get clean
