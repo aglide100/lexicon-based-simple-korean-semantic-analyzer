@@ -1,9 +1,15 @@
+from concurrent.futures import process
+from logging import getLogger
 import pandas as pd
 # from konlpy.tag import Mecab
 from konlpy.tag import Kkma
 from emosent import *
 import re
 import emoji
+# import multiprocessing
+# import threading
+# from concurrent import futures
+import logging
 
 def emoji_sentiment(text):
     return get_emoji_sentiment_rank(text)["sentiment_score"]
@@ -96,13 +102,15 @@ class Analyzer:
 
         return analyzed_words
     
-    # def analyze_word(sentence):
-    #     lexicon_dictionary = pd.read_csv('lexicon/polarity.csv')
+    def analyze_word(sentence):
+        lexicon_dictionary = pd.read_csv('lexicon/polarity.csv')
 
-    #     word_chunks = Analyzer.analyze_sentences_into_chunks(Analyzer.remove_unnecessary_word(sentence))
-    #     categorized_scores = Analyzer.get_score_from_chunks(word_chunks, lexicon_dictionary)
+        word_chunks = Analyzer.analyze_sentences_into_chunks(Analyzer.remove_unnecessary_word(sentence))
+        categorized_scores = Analyzer.get_score_from_chunks(word_chunks, lexicon_dictionary)
         
-    #     print(categorized_scores)
+        Analyzer.get_logger().debug(f"sentence: {sentence}, socre: {categorized_scores}")
+
+        # print(categorized_scores)
 
     def analyze_from_array(sentences):
         lexicon_dictionary = pd.read_csv('lexicon/polarity.csv')
@@ -113,4 +121,15 @@ class Analyzer:
             print(sentence)
             print("/")
             print(categorized_scores)
-        return 
+        return
+
+    def get_logger():
+        logger = logging.getLogger()
+        if not logger.hasHandlers():
+            handler = logging.StreamHandler(sys.stdout)
+            formatter = logging.Formatter("[%(process)d/%(processName)s] %(message)s")
+            handler.setFormatter(formatter)
+            handler.setLevel(logging.DEBUG)
+            logger.addHandler(handler)
+            logger.setLevel(logging.DEBUG)
+        return logger
