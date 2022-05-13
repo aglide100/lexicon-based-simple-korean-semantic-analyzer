@@ -1,15 +1,13 @@
-from concurrent.futures import process
-from logging import getLogger
+
+import logging 
 import pandas as pd
 # from konlpy.tag import Mecab
 from konlpy.tag import Kkma
 from emosent import *
 import re
 import emoji
-# import multiprocessing
-# import threading
-# from concurrent import futures
 import logging
+import sys
 
 def emoji_sentiment(text):
     return get_emoji_sentiment_rank(text)["sentiment_score"]
@@ -45,7 +43,7 @@ class Analyzer:
         scores = {'POS': 0, 'NEG': 0, 'NEUT': 0, 'COMP': 0, 'None': 0}
 
         for chunk in chunks:
-            print(chunk)
+            # print(chunk)
             
             if chunk.startswith(":") and chunk.endswith(":"):
                 try:
@@ -64,8 +62,8 @@ class Analyzer:
             
         return Analyzer.scores_to_percentiles(scores)
 
-    def calc_scores(scores):
-        return scores['POS'] / ()
+    # def calc_scores(scores):
+    #     return scores['POS'] / ()
 
     def scores_to_percentiles(scores):
         sum_of_scores = sum(scores.values())
@@ -84,7 +82,8 @@ class Analyzer:
         
         analyzed_words = []
 
-        print("in analyze_sentences_into_chunks", sentences)
+        Analyzer.get_logger().info(f"in analyze_sentences_into_chunks {sentences}")
+        # print("in analyze_sentences_into_chunks", sentences)
         for str in sentences:
             str = Analyzer.preprocessing(str)
           
@@ -108,20 +107,20 @@ class Analyzer:
         word_chunks = Analyzer.analyze_sentences_into_chunks(Analyzer.remove_unnecessary_word(sentence))
         categorized_scores = Analyzer.get_score_from_chunks(word_chunks, lexicon_dictionary)
         
-        Analyzer.get_logger().debug(f"sentence: {sentence}, socre: {categorized_scores}")
+        Analyzer.get_logger().info(f"sentence: {sentence}, socre: {categorized_scores}")
 
         # print(categorized_scores)
 
-    def analyze_from_array(sentences):
-        lexicon_dictionary = pd.read_csv('lexicon/polarity.csv')
+    # def analyze_from_array(sentences):
+    #     lexicon_dictionary = pd.read_csv('lexicon/polarity.csv')
 
-        for sentence in sentences:
-            word_chunks = Analyzer.analyze_sentences_into_chunks(Analyzer.remove_unnecessary_word(sentence))
-            categorized_scores = Analyzer.get_score_from_chunks(word_chunks, lexicon_dictionary)
-            print(sentence)
-            print("/")
-            print(categorized_scores)
-        return
+    #     for sentence in sentences:
+    #         word_chunks = Analyzer.analyze_sentences_into_chunks(Analyzer.remove_unnecessary_word(sentence))
+    #         categorized_scores = Analyzer.get_score_from_chunks(word_chunks, lexicon_dictionary)
+    #         print(sentence)
+    #         print("/")
+    #         print(categorized_scores)
+    #     return
 
     def get_logger():
         logger = logging.getLogger()

@@ -3,6 +3,8 @@ from Lexicon import Analyzer
 from concurrent.futures import ProcessPoolExecutor
 import multiprocessing as mp
 
+
+
 print("Start!")
 
 try:
@@ -18,7 +20,5 @@ except ValueError:
         with ProcessPoolExecutor(max_workers=mp.cpu_count()) as executor:
             for sentence in raw_data:
                 executor.submit(Analyzer.analyze_word, sentence)
-
-
 
 # Manager.create_sqlite()
