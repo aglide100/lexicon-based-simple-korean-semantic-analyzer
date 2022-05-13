@@ -16,10 +16,10 @@ class Manager:
         content7 = "어린이날🫶🏻🍓🌱"
 
         raw_data.append(content1)
-        # raw_data.append(content2)
-        # raw_data.append(content3)
-        # raw_data.append(content4)
-        # raw_data.append(content5)
+        raw_data.append(content2)
+        raw_data.append(content3)
+        raw_data.append(content4)
+        raw_data.append(content5)
         # raw_data.append(content6)
         # raw_data.extend(content7)
 
