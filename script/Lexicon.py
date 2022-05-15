@@ -26,11 +26,6 @@ class Analyzer:
 
 
     def preprocessing(text):
-        # print(text)
-        
-        # text = re.sub('[a-zA-Z]' , ' ', text)
-        # text = re.sub('[/[\{\}\[\]\/?|\)*~`!\-_+<>@\#$%&\\\=\(\'\"]+', '', text)
-        
         # text = re.sub('[#]+[0-9a-zA-Z_]+', ' ', text)
         # text = text.replace('\n',' ')
         
@@ -61,9 +56,6 @@ class Analyzer:
                         scores[row['max.value']] += row['max.prop']
             
         return Analyzer.scores_to_percentiles(scores)
-
-    # def calc_scores(scores):
-    #     return scores['POS'] / ()
 
     def scores_to_percentiles(scores):
         sum_of_scores = sum(scores.values())
