@@ -8,6 +8,8 @@ import re
 import emoji
 import logging
 import sys
+from hanspell import spell_checker
+
 
 def emoji_sentiment(text):
     return get_emoji_sentiment_rank(text)["sentiment_score"]
@@ -20,6 +22,10 @@ class Analyzer:
         text = re.sub(r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", ' ', text) # http로 시작되는 url
         text = re.sub(r"[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{2,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)", ' ', text) # http로 시작되지 않는 url
    
+        spelled_sent = spell_checker.check(text)
+
+        hanspell_sent = spelled_sent.checked
+        text = hanspell_sent
         text = text.rstrip().lstrip()
         # print("in remove_unnecessary_word", text)
         return text
@@ -98,8 +104,10 @@ class Analyzer:
 
         word_chunks = Analyzer.analyze_sentences_into_chunks(Analyzer.remove_unnecessary_word(sentence))
         categorized_scores = Analyzer.get_score_from_chunks(word_chunks, lexicon_dictionary)
-        
+        Analyzer.get_logger().info(f"-------------------------------------------------")
         Analyzer.get_logger().info(f"sentence: {sentence}, socre: {categorized_scores}")
+        Analyzer.get_logger().info(f" ")
+        Analyzer.get_logger().info(f"socre: {categorized_scores}")
 
         # print(categorized_scores)
 
