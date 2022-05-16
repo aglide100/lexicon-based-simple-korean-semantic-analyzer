@@ -1,4 +1,3 @@
-
 import logging 
 import pandas as pd
 # from konlpy.tag import Mecab
@@ -8,6 +7,8 @@ import re
 import emoji
 import logging
 import sys
+from hanspell import spell_checker
+
 
 def emoji_sentiment(text):
     return get_emoji_sentiment_rank(text)["sentiment_score"]
@@ -21,6 +22,13 @@ class Analyzer:
         text = re.sub(r"[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{2,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)", ' ', text) # http로 시작되지 않는 url
    
         text = text.rstrip().lstrip()
+
+        text = spell_checker.check(text)
+
+        text = text.checked
+        
+        text = ' '.join(text.split())
+        # print(text)
         # print("in remove_unnecessary_word", text)
         return text
 
@@ -28,10 +36,8 @@ class Analyzer:
     def preprocessing(text):
         # text = re.sub('[#]+[0-9a-zA-Z_]+', ' ', text)
         # text = text.replace('\n',' ')
-        
-        text = ' '.join(text.split())
-        # print(text)
-       
+
+  
         return emoji.demojize(text)
 
     def get_score_from_chunks(chunks, lexicons):
