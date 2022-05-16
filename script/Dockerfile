@@ -13,6 +13,8 @@ RUN mkdir -p /tmp
 
 RUN pip install --upgrade pip 
 
+RUN pip install git+https://github.com/ssut/py-hanspell.git
+
 RUN pip install --upgrade pip \
     && pip install -r requirements.txt
 
