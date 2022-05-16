@@ -26,22 +26,14 @@ class Analyzer:
         hanspell_sent = spelled_sent.checked
         text = hanspell_sent
         text = text.rstrip().lstrip()
-
-        text = spell_checker.check(text)
-
-        text = text.checked
         
         text = ' '.join(text.split())
-        # print(text)
-        # print("in remove_unnecessary_word", text)
         return text
 
 
     def preprocessing(text):
         # text = re.sub('[#]+[0-9a-zA-Z_]+', ' ', text)
         # text = text.replace('\n',' ')
-
-  
         return emoji.demojize(text)
 
     def get_score_from_chunks(chunks, lexicons):
@@ -112,19 +104,6 @@ class Analyzer:
         Analyzer.get_logger().info(f"sentence: {sentence}, socre: {categorized_scores}")
         Analyzer.get_logger().info(f" ")
         Analyzer.get_logger().info(f"socre: {categorized_scores}")
-
-        # print(categorized_scores)
-
-    # def analyze_from_array(sentences):
-    #     lexicon_dictionary = pd.read_csv('lexicon/polarity.csv')
-
-    #     for sentence in sentences:
-    #         word_chunks = Analyzer.analyze_sentences_into_chunks(Analyzer.remove_unnecessary_word(sentence))
-    #         categorized_scores = Analyzer.get_score_from_chunks(word_chunks, lexicon_dictionary)
-    #         print(sentence)
-    #         print("/")
-    #         print(categorized_scores)
-    #     return
 
     def get_logger():
         logger = logging.getLogger()
