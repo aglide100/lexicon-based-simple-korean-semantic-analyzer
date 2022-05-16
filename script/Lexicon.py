@@ -1,4 +1,3 @@
-
 import logging 
 import pandas as pd
 # from konlpy.tag import Mecab
@@ -27,6 +26,13 @@ class Analyzer:
         hanspell_sent = spelled_sent.checked
         text = hanspell_sent
         text = text.rstrip().lstrip()
+
+        text = spell_checker.check(text)
+
+        text = text.checked
+        
+        text = ' '.join(text.split())
+        # print(text)
         # print("in remove_unnecessary_word", text)
         return text
 
@@ -34,10 +40,8 @@ class Analyzer:
     def preprocessing(text):
         # text = re.sub('[#]+[0-9a-zA-Z_]+', ' ', text)
         # text = text.replace('\n',' ')
-        
-        text = ' '.join(text.split())
-        # print(text)
-       
+
+  
         return emoji.demojize(text)
 
     def get_score_from_chunks(chunks, lexicons):
