@@ -39,8 +39,8 @@ class Analyzer:
         only_BMP_pattern = re.compile("["
                 u"\U00010000-\U0010FFFF"  #BMP characters 이외
                                    "]+", flags=re.UNICODE)
-        print("111"+only_BMP_pattern)
-        return only_BMP_pattern.sub(r'', text), ""
+
+        return only_BMP_pattern.sub(r'', text), only_BMP_pattern.findall(text)
 
     def get_score_from_chunks(chunks, lexicons):
         scores = {'POS': 0, 'NEG': 0, 'NEUT': 0, 'COMP': 0, 'None': 0}
@@ -48,13 +48,11 @@ class Analyzer:
         for chunk in chunks:
             if chunk.startswith(":") and chunk.endswith(":"):
                 try:
-                    print("!!!!!!" + chunk)
                     out = get_emoji_sentiment_rank(emoji.emojize(chunk))
                     
                     scores['POS'] += out["positive"] / out["occurrences"]
                     scores['NEG'] += out["negative"] / out["occurrences"]
                     scores['NEUT'] += out["neutral"] / out["occurrences"]
-                    # scores['NEUT'] += out["neutral"]
                 except KeyError:
                     pass 
             else:
@@ -87,28 +85,12 @@ class Analyzer:
         print(only_BMP_pattern)
         result = m.pos(preprocessed)
         
-        for value in only_BMP_pattern:
-            analyzed_words.append(emoji.demojize(value))
 
         for value in result:
             analyzed_words.append(value[0]+"/"+value[1])
         
-        #Analyzer.get_logger().info(f"in analyze_sentences_into_chunks {sentences}")
-        # print("in analyze_sentences_into_chunks", sentences)
-        # for str in sentences:
-        #     str = Analyzer.preprocessing(str)
-            
-        #     if len(str) > 2:
-        #         analyzed_words.append(str)
-        #         continue
-            
-        #     # analyzed_str = kkma.pos(str)
-        #     analyzed_str = m.pos(str)
-        #     tmp_arr = []
-            
-        #     for word in analyzed_str:
-        #         tmp_arr.append("/".join(word))
-        #     analyzed_words.append(";".join(tmp_arr))
+        for value in only_BMP_pattern:
+            analyzed_words.append(emoji.demojize(value))
 
         return analyzed_words
     
@@ -119,10 +101,7 @@ class Analyzer:
         word_chunks = Analyzer.analyze_sentences_into_chunks(Analyzer.remove_unnecessary_word(sentence))
         categorized_scores = Analyzer.get_score_from_chunks(word_chunks, lexicon_dictionary)
 
-        Analyzer.get_logger().info(f"-------------------------------------------------")
-        Analyzer.get_logger().info(f"sentence: {sentence}")
-        Analyzer.get_logger().info(f" ")
-        Analyzer.get_logger().info(f"socre: {categorized_scores}")
+        Analyzer.get_logger().info(f"-------------------------------------------------\nsentence: {sentence}\n\nsocre: {categorized_scores}")
 
     def get_logger():
         logger = logging.getLogger()
