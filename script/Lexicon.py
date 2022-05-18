@@ -36,9 +36,7 @@ class Analyzer:
         # text = re.sub('[#]+[0-9a-zA-Z_]+', ' ', text)
         # text = text.replace('\n',' ')
         # return text
-        only_BMP_pattern = re.compile("["
-                u"\U00010000-\U0010FFFF"  #BMP characters 이외
-                                   "]+", flags=re.UNICODE)
+        only_BMP_pattern = re.compile("[" + u"\U00010000-\U0010FFFF" + "]+", flags=re.UNICODE)
 
         return only_BMP_pattern.sub(r'', text), only_BMP_pattern.findall(text)
 

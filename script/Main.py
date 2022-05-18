@@ -2,11 +2,10 @@ from Data import Manager
 from Lexicon import Analyzer
 from concurrent.futures import ProcessPoolExecutor
 import multiprocessing as mp
-
-
+import time
 
 print("Start!")
-
+start = time.time()
 # try:
 #     file = open("./db/data.db", "rw")
 # except FileNotFoundError:
@@ -18,6 +17,8 @@ raw_data = Manager.get_mock_raw_data()
 for sentence in raw_data:
     Analyzer.analyze_word(sentence)
 
+
+print("소요시간 :", time.time() - start) 
     # if __name__ == "__main__":
     #     with ProcessPoolExecutor(max_workers=1) as executor:
     #         for sentence in raw_data:
