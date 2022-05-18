@@ -1,6 +1,7 @@
 import logging 
 import pandas as pd
 # from konlpy.tag import Mecab
+#from konlpy.tag import Okt
 from konlpy.tag import Kkma
 from emosent import *
 import re
@@ -20,30 +21,34 @@ class Analyzer:
         text = re.sub(' +', ' ', text)
         text = re.sub(r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", ' ', text) # http로 시작되는 url
         text = re.sub(r"[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{2,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)", ' ', text) # http로 시작되지 않는 url
-   
-        spelled_sent = spell_checker.check(text)
-
-        hanspell_sent = spelled_sent.checked
-        text = hanspell_sent
+        
         text = text.rstrip().lstrip()
         
-        text = ' '.join(text.split())
+        spelled_sent = spell_checker.check(text)
+        hanspell_sent = spelled_sent.checked
+        text = hanspell_sent
+        
         return text
 
 
     def preprocessing(text):
+        # text = ' '.join(text.split())
         # text = re.sub('[#]+[0-9a-zA-Z_]+', ' ', text)
         # text = text.replace('\n',' ')
-        return emoji.demojize(text)
+        # return text
+        only_BMP_pattern = re.compile("["
+                u"\U00010000-\U0010FFFF"  #BMP characters 이외
+                                   "]+", flags=re.UNICODE)
+        print("111"+only_BMP_pattern)
+        return only_BMP_pattern.sub(r'', text), ""
 
     def get_score_from_chunks(chunks, lexicons):
         scores = {'POS': 0, 'NEG': 0, 'NEUT': 0, 'COMP': 0, 'None': 0}
 
         for chunk in chunks:
-            # print(chunk)
-            
             if chunk.startswith(":") and chunk.endswith(":"):
                 try:
+                    print("!!!!!!" + chunk)
                     out = get_emoji_sentiment_rank(emoji.emojize(chunk))
                     
                     scores['POS'] += out["positive"] / out["occurrences"]
@@ -72,36 +77,50 @@ class Analyzer:
 
     def analyze_sentences_into_chunks(sentences):
         m = Kkma()
+        #m = Okt()
         # m = Mecab()
         
         analyzed_words = []
+        preprocessed, only_BMP_pattern = Analyzer.preprocessing(sentences)
+        
+        print(preprocessed)
+        print(only_BMP_pattern)
+        result = m.pos(preprocessed)
+        
+        for value in only_BMP_pattern:
+            analyzed_words.append(emoji.demojize(value))
 
-        Analyzer.get_logger().info(f"in analyze_sentences_into_chunks {sentences}")
+        for value in result:
+            analyzed_words.append(value[0]+"/"+value[1])
+        
+        #Analyzer.get_logger().info(f"in analyze_sentences_into_chunks {sentences}")
         # print("in analyze_sentences_into_chunks", sentences)
-        for str in sentences:
-            str = Analyzer.preprocessing(str)
-          
-            if len(str) > 2:
-                analyzed_words.append(str)
-                continue
-
-            # analyzed_str = kkma.pos(str)
-            analyzed_str = m.pos(str)
-            tmp_arr = []
-
-            for word in analyzed_str:
-                tmp_arr.append("/".join(word))
-            analyzed_words.append(";".join(tmp_arr))
+        # for str in sentences:
+        #     str = Analyzer.preprocessing(str)
+            
+        #     if len(str) > 2:
+        #         analyzed_words.append(str)
+        #         continue
+            
+        #     # analyzed_str = kkma.pos(str)
+        #     analyzed_str = m.pos(str)
+        #     tmp_arr = []
+            
+        #     for word in analyzed_str:
+        #         tmp_arr.append("/".join(word))
+        #     analyzed_words.append(";".join(tmp_arr))
 
         return analyzed_words
     
     def analyze_word(sentence):
+        Analyzer.get_logger().info(f"start")
         lexicon_dictionary = pd.read_csv('lexicon/polarity.csv')
-
+     
         word_chunks = Analyzer.analyze_sentences_into_chunks(Analyzer.remove_unnecessary_word(sentence))
         categorized_scores = Analyzer.get_score_from_chunks(word_chunks, lexicon_dictionary)
+
         Analyzer.get_logger().info(f"-------------------------------------------------")
-        Analyzer.get_logger().info(f"sentence: {sentence}, socre: {categorized_scores}")
+        Analyzer.get_logger().info(f"sentence: {sentence}")
         Analyzer.get_logger().info(f" ")
         Analyzer.get_logger().info(f"socre: {categorized_scores}")
 
