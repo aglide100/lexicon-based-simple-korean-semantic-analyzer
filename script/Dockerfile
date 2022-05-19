@@ -1,4 +1,5 @@
-FROM python:3.9.12-slim
+#FROM python:3.9.12-slim
+FROM python:3.11.0b1-slim
 
 COPY . /
 
