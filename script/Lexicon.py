@@ -1,7 +1,7 @@
 import logging 
 import pandas as pd
 # from konlpy.tag import Mecab
-#from konlpy.tag import Okt
+from konlpy.tag import Okt
 from konlpy.tag import Kkma
 from emosent import *
 import re
@@ -9,12 +9,16 @@ import emoji
 import logging
 import sys
 from hanspell import spell_checker
-
+#from pykospacing import Spacing
+# import twitter_korean
 
 def emoji_sentiment(text):
     return get_emoji_sentiment_rank(text)["sentiment_score"]
 
 class Analyzer:
+    def __init__(self) -> None:
+        self.lexicon_dictionary = pd.read_csv('lexicon/polarity.csv')
+     
     def remove_unnecessary_word(text):
         text = re.sub('[/[\{\}\[\]\/?|\)*~`!\-_+<>@\#$%&\\\=\(\'\"]+', '', text)
         text = re.sub('[a-zA-Z]' , ' ', text)
@@ -24,12 +28,15 @@ class Analyzer:
         
         text = text.rstrip().lstrip()
         
+        #spacing = Spacing()
+        #text = spacing(text) 
+        #Analyzer.get_logger().info(f"after text: " + text)
+
         spelled_sent = spell_checker.check(text)
         hanspell_sent = spelled_sent.checked
         text = hanspell_sent
         
         return text
-
 
     def preprocessing(text):
         # text = ' '.join(text.split())
@@ -73,17 +80,16 @@ class Analyzer:
 
     def analyze_sentences_into_chunks(sentences):
         m = Kkma()
-        #m = Okt()
+        #o = Okt()
         # m = Mecab()
         
         analyzed_words = []
         preprocessed, only_BMP_pattern = Analyzer.preprocessing(sentences)
         
-        print(preprocessed)
-        print(only_BMP_pattern)
+        #Analyzer.get_logger().info(f"okt: ", o.pos(preprocessed))
+
         result = m.pos(preprocessed)
         
-
         for value in result:
             analyzed_words.append(value[0]+"/"+value[1])
         
@@ -92,12 +98,9 @@ class Analyzer:
 
         return analyzed_words
     
-    def analyze_word(sentence):
-        Analyzer.get_logger().info(f"start")
-        lexicon_dictionary = pd.read_csv('lexicon/polarity.csv')
-     
+    def analyze_word(self, sentence):
         word_chunks = Analyzer.analyze_sentences_into_chunks(Analyzer.remove_unnecessary_word(sentence))
-        categorized_scores = Analyzer.get_score_from_chunks(word_chunks, lexicon_dictionary)
+        categorized_scores = Analyzer.get_score_from_chunks(word_chunks, self.lexicon_dictionary)
 
         Analyzer.get_logger().info(f"-------------------------------------------------\nsentence: {sentence}\n\nsocre: {categorized_scores}")
 

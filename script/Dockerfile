@@ -12,11 +12,17 @@ RUN apt-get update && apt-get install -y g++ default-jdk git
 
 #RUN mkdir -p /tmp
 
-RUN pip install --upgrade pip \
-    && pip install -r requirements.txt
-
+RUN pip install --upgrade pip && \
+    pip install pip-tools  && \
+    pip install -r requirements.txt
+    
 RUN pip install git+https://github.com/ssut/py-hanspell.git && \
     pip install pip-tools
+
+    
+#RUN pip install git+https://github.com/haven-jeon/PyKoSpacing.git 
+
+#RUN pip install git+https://github.com/cedar101/twitter-korean-py.git
 
 RUN python3 build_script.py build_ext --inplace
 

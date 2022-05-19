@@ -6,16 +6,18 @@ import pandas as pd
 
 import time
 
-print("Start!")
+print("cpu_count: ", mp.cpu_count())
 start = time.time()
 
 data = pd.read_csv("./db/data.csv", sep="\t")
 
+analyzer = Analyzer()
+
 if __name__ == "__main__":
     with ProcessPoolExecutor(max_workers=mp.cpu_count()) as executor:
-        # analyzer = Analyzer()
+        
         for idx, row in data.itertuples():
-            executor.submit(Analyzer.analyze_word, row)
+            executor.submit(analyzer.analyze_word, row)
 
 
 
