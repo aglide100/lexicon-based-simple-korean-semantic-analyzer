@@ -16,12 +16,12 @@ start = time.time()
 # except ValueError:
 data = pd.read_csv("./db/data.csv", sep="\t")
 
-analyzer = Analyzer()
-
 
 if __name__ == "__main__":
+    dictionary = pd.read_csv('lexicon/polarity.csv')
+    
     for idx, row in data.itertuples():
-        analyzer.analyze_word(row)
+        Analyzer.analyze_word(row, dictionary)
 
 
 #raw_data = Manager.get_mock_raw_data()

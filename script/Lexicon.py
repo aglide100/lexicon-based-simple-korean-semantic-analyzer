@@ -1,7 +1,6 @@
 import logging 
 import pandas as pd
 # from konlpy.tag import Mecab
-from konlpy.tag import Okt
 from konlpy.tag import Kkma
 from emosent import *
 import re
@@ -11,14 +10,76 @@ import sys
 from hanspell import spell_checker
 #from pykospacing import Spacing
 # import twitter_korean
+import time
+#from numba import jit
 
 def emoji_sentiment(text):
     return get_emoji_sentiment_rank(text)["sentiment_score"]
 
+#@jit(cache=True)
+def calc_score(textPosed, dictionary, scores):
+    temp = ""
+    #result
+    for idx, chunk in enumerate(textPosed):
+        
+
+        if chunk.startswith(":") and chunk.endswith(":"):
+              try:
+                  out = get_emoji_sentiment_rank(emoji.emojize(chunk))
+                  
+                  scores['POS'] += out["positive"] / out["occurrences"]
+                  scores['NEG'] += out["negative"] / out["occurrences"]
+                  scores['NEUT'] += out["neutral"] / out["occurrences"]
+              except KeyError:
+                  pass
+        else:
+            result = ""
+
+            if temp == "":
+                result = dictionary.loc[(dictionary['ngram'] == chunk+";")]
+
+                if result.empty:
+                    # ECS 등 체크
+                    result = dictionary.loc[(dictionary['ngram'] == chunk[:-1]+";")]
+
+                if result.empty:
+                    # ; 체크
+                    result = dictionary.loc[(dictionary['ngram'] == chunk)]
+
+                if result.empty:
+                    pass
+                    #print("맞는 값이 없음....")
+                else:
+                    temp = temp + chunk
+                
+            else:
+                check = temp + ";" + chunk
+
+                result = dictionary.loc[(dictionary['ngram'] == check+";")]
+
+                if result.empty:
+                    #print("check!!!", check[:-2]+";")
+                    result = dictionary.loc[(dictionary['ngram'] == check[:-1]+";")]
+                
+                if result.empty:
+                    # ; 체크
+                    result = dictionary.loc[(dictionary['ngram'] == check)]
+
+                if result.empty:
+                    #print("이전 값 추가")
+                    result = dictionary.loc[(dictionary['ngram'] == temp + ";")]
+                    temp = ""
+            
+
+            if result.empty:
+                pass
+            else:
+                scores[result.iloc[0]['max.value']] += result.iloc[0]['max.prop']
+
+        
+    return scores
+
 class Analyzer:
-    def __init__(self) -> None:
-        self.lexicon_dictionary = pd.read_csv('lexicon/polarity.csv')
-     
     def remove_unnecessary_word(text):
         text = re.sub('[/[\{\}\[\]\/?|\)*~`!\-_+<>@\#$%&\\\=\(\'\"]+', '', text)
         text = re.sub('[a-zA-Z]' , ' ', text)
@@ -47,24 +108,12 @@ class Analyzer:
 
         return only_BMP_pattern.sub(r'', text), only_BMP_pattern.findall(text)
 
+    
+    #@jit
     def get_score_from_chunks(chunks, lexicons):
         scores = {'POS': 0, 'NEG': 0, 'NEUT': 0, 'COMP': 0, 'None': 0}
+        scores = calc_score(chunks, lexicons, scores)
 
-        for chunk in chunks:
-            if chunk.startswith(":") and chunk.endswith(":"):
-                try:
-                    out = get_emoji_sentiment_rank(emoji.emojize(chunk))
-                    
-                    scores['POS'] += out["positive"] / out["occurrences"]
-                    scores['NEG'] += out["negative"] / out["occurrences"]
-                    scores['NEUT'] += out["neutral"] / out["occurrences"]
-                except KeyError:
-                    pass 
-            else:
-                for index, row in lexicons.iterrows():
-                    if row['ngram'] in chunk:
-                        scores[row['max.value']] += row['max.prop']
-            
         return Analyzer.scores_to_percentiles(scores)
 
     def scores_to_percentiles(scores):
@@ -78,18 +127,16 @@ class Analyzer:
 
         return scores
 
-    def analyze_sentences_into_chunks(sentences):
-        m = Kkma()
+    def analyze_sentences_into_chunks(sentences, m):
+        #m = Kkma()
         #o = Okt()
         # m = Mecab()
         
         analyzed_words = []
         preprocessed, only_BMP_pattern = Analyzer.preprocessing(sentences)
-        
-        #Analyzer.get_logger().info(f"okt: ", o.pos(preprocessed))
 
         result = m.pos(preprocessed)
-        
+
         for value in result:
             analyzed_words.append(value[0]+"/"+value[1])
         
@@ -98,11 +145,20 @@ class Analyzer:
 
         return analyzed_words
     
-    def analyze_word(self, sentence):
-        word_chunks = Analyzer.analyze_sentences_into_chunks(Analyzer.remove_unnecessary_word(sentence))
-        categorized_scores = Analyzer.get_score_from_chunks(word_chunks, self.lexicon_dictionary)
+    def analyze_word(row, dictionary):
+        m = Kkma()
+        start = time.time()
 
-        Analyzer.get_logger().info(f"-------------------------------------------------\nsentence: {sentence}\n\nsocre: {categorized_scores}")
+        word_chunks = Analyzer.analyze_sentences_into_chunks(Analyzer.remove_unnecessary_word(row), m)
+        
+        categorized_scores = Analyzer.get_score_from_chunks(word_chunks, dictionary)
+        
+        Analyzer.get_logger().info(f"-------------------------------------------------\nsentence: {row}\n\nsocre: {categorized_scores}")
+       
+            
+        
+        
+        Analyzer.get_logger().info(f"점수 계산 시간 {time.time() - start}")
 
     def get_logger():
         logger = logging.getLogger()
@@ -113,4 +169,5 @@ class Analyzer:
             handler.setLevel(logging.DEBUG)
             logger.addHandler(handler)
             logger.setLevel(logging.DEBUG)
+            
         return logger

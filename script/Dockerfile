@@ -1,5 +1,5 @@
-#FROM python:3.9.12-slim
-FROM python:3.11.0b1-slim
+FROM python:3.9.12-slim
+#FROM python:3.11.0b1-slim
 
 COPY . /
 
@@ -9,7 +9,7 @@ VOLUME /data
 
 ENV JAVA_HOME /usr/lib/jvm/java-1.7-openjdk/jre
 
-RUN apt-get update && apt-get install -y g++ default-jdk git
+RUN apt-get update && apt-get install -y g++ default-jdk git 
 
 #RUN mkdir -p /tmp
 
@@ -20,7 +20,7 @@ RUN pip install --upgrade pip && \
 RUN pip install git+https://github.com/ssut/py-hanspell.git && \
     pip install pip-tools
 
-    
+
 #RUN pip install git+https://github.com/haven-jeon/PyKoSpacing.git 
 
 #RUN pip install git+https://github.com/cedar101/twitter-korean-py.git
