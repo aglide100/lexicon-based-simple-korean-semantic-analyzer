@@ -1,5 +1,6 @@
 import pandas as pd
 from Lexicon import Analyzer
+import time
 
 #data = pd.read_csv("./db/data.csv", sep="\t")
 start = time.time()
