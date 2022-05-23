@@ -1,30 +1,62 @@
-from Data import Manager
-from Lexicon import Analyzer
-from concurrent.futures import ProcessPoolExecutor
-#from multiprocessing import Process, shared_memory, Semaphore
-import multiprocessing as mp
 import pandas as pd
-from konlpy.tag import Kkma
-import time
-#import os
+from Lexicon import Analyzer
 
-
-print("cpu_count: ", mp.cpu_count())
+#data = pd.read_csv("./db/data.csv", sep="\t")
 start = time.time()
 
-data = pd.read_csv("./db/data.csv", sep="\t")
+dataSet = pd.read_csv("./db/movie_review.csv")
 
-#for idx, row in data.itertuples():
-#   Analyzer.analyze_word(row, dictionary, m)
+data = dataSet.drop(["score"], axis=1)
+# scores = dataSet.drop(["text"], axis=1)
+dictionary = pd.read_csv('lexicon/polarity.csv')
 
-if __name__ == "__main__":
-    dictionary = pd.read_csv('lexicon/polarity.csv')
-    
-    with ProcessPoolExecutor(max_workers=mp.cpu_count()) as executor:   
-        for idx, row in data.itertuples():
-            executor.submit(Analyzer.analyze_word, row, dictionary)
-        
+result = pd.DataFrame({})
+
+for idx, row in data.itertuples():
+    score = Analyzer.analyze_word(row, dictionary)
+    if result.empty:
+        result = score
+    else:
+        result = pd.concat([result, score], axis = 0)
+    # insert_to_frame = pd.DataFrame(data=score)
+    # result.append(score, ignore_index=True)
+
+success = 0
+fail = 0
+
+result = pd.merge(result, dataSet, how='left')
+# result = pd.join([result, scores], axis = 1)
+
+# result = result.reset_index(drop=True)
+for index, row in result.iterrows():
+    print('------')
+    if row['max'] == "POS":
+        if row['score'] == 1:
+            success += 1
+        else:
+            print("-------------")
+            print("may be wrong")
+            print(row['text'])
+            print("   ")
+            fail +=1
+    elif row['max'] == "NEG":
+        if row['score'] == 0:
+            success += 1
+        else:
+            print("-------------")
+            print("may be wrong")
+            print(row['text'])
+            print("   ")
+            fail +=1
+    else:
+        print("-------------")
+        print("something else")
+        print(row['text'])
+        print("   ")
+
+
+print("correct", success)
+print("fail", fail)
 
 
 print("소요시간 :", time.time() - start) 
-# Manager.create_sqlite()

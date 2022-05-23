@@ -21,8 +21,6 @@ def calc_score(textPosed, dictionary, scores):
     temp = ""
     #result
     for idx, chunk in enumerate(textPosed):
-        
-
         if chunk.startswith(":") and chunk.endswith(":"):
               try:
                   out = get_emoji_sentiment_rank(emoji.emojize(chunk))
@@ -155,10 +153,9 @@ class Analyzer:
         
         Analyzer.get_logger().info(f"-------------------------------------------------\nsentence: {row}\n\nsocre: {categorized_scores}")
        
-            
-        
-        
         Analyzer.get_logger().info(f"점수 계산 시간 {time.time() - start}")
+        result = pd.DataFrame({'text': row, 'pos': categorized_scores['POS'], 'neg': categorized_scores['NEG'], 'neut': categorized_scores['NEUT'], 'comp': categorized_scores['COMP'], 'none': categorized_scores['None'], 'max': max(categorized_scores, key=categorized_scores.get)}, index=['text'])
+        return result
 
     def get_logger():
         logger = logging.getLogger()
