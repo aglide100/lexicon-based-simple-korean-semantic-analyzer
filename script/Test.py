@@ -26,18 +26,26 @@ success = 0
 fail = 0
 
 result = pd.merge(result, dataSet, how='left')
-# result = pd.join([result, scores], axis = 1)
 
 # result = result.reset_index(drop=True)
 for index, row in result.iterrows():
-    print('------')
+    if row['max'] == "None":
+        continue
+
+    if row['max'] == "COMP":
+        continue
+
+    if row['max'] == "NEUT":
+        continue
+
     if row['max'] == "POS":
         if row['score'] == 1:
             success += 1
         else:
             print("-------------")
-            print("may be wrong")
+            print("it should be NEG")
             print(row['text'])
+            print(row['pos'], row['neg'])
             print("   ")
             fail +=1
     elif row['max'] == "NEG":
@@ -45,19 +53,13 @@ for index, row in result.iterrows():
             success += 1
         else:
             print("-------------")
-            print("may be wrong")
+            print("it should be POS")
             print(row['text'])
+            print(row['pos'], row['neg'])
             print("   ")
             fail +=1
-    else:
-        print("-------------")
-        print("something else")
-        print(row['text'])
-        print("   ")
-
 
 print("correct", success)
 print("fail", fail)
-
 
 print("소요시간 :", time.time() - start) 

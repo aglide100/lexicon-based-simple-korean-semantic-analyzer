@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+service Analyzer {
+    rpc StartAnalyzer (StartAnalyzerReq) returns (StartAnalyzerRes) {}
+    rpc GetStatus (GetStatusReq) returns (GetStatusRes) {}
+}
+
+message StartAnalyzerReq {
+    
+}
+
+message StartAnalyzerRes {
+
+}
+
+message GetStatusReq {
+
+}
+
+message GetStatusRes {
+    string status = 1;
+}

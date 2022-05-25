@@ -15,10 +15,9 @@ RUN pip install --upgrade pip && \
     pip install pip-tools  && \
     pip install -r requirements.txt
     
-RUN pip install git+https://github.com/ssut/py-hanspell.git 
+#RUN pip install git+https://github.com/ssut/py-hanspell.git 
 
-
-#RUN pip install git+https://github.com/haven-jeon/PyKoSpacing.git 
+RUN pip install git+https://github.com/haven-jeon/PyKoSpacing.git 
 
 #RUN pip install git+https://github.com/cedar101/twitter-korean-py.git
 

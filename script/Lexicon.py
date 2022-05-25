@@ -7,8 +7,8 @@ import re
 import emoji
 import logging
 import sys
-from hanspell import spell_checker
-#from pykospacing import Spacing
+#from hanspell import spell_checker
+from pykospacing import Spacing
 # import twitter_korean
 import time
 #from numba import jit
@@ -87,13 +87,13 @@ class Analyzer:
         
         text = text.rstrip().lstrip()
         
-        #spacing = Spacing()
-        #text = spacing(text) 
+        spacing = Spacing()
+        text = spacing(text) 
         #Analyzer.get_logger().info(f"after text: " + text)
 
-        spelled_sent = spell_checker.check(text)
-        hanspell_sent = spelled_sent.checked
-        text = hanspell_sent
+        #spelled_sent = spell_checker.check(text)
+        #hanspell_sent = spelled_sent.checked
+        #text = hanspell_sent
         
         return text
 
