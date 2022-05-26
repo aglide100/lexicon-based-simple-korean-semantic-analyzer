@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0e\x61nalyzer.proto\"\x12\n\x10StartAnalyzerReq\"\x12\n\x10StartAnalyzerRes\"\x0e\n\x0cGetStatusReq\"\x1e\n\x0cGetStatusRes\x12\x0e\n\x06status\x18\x01 \x01(\t2p\n\x08\x41nalyzer\x12\x37\n\rStartAnalyzer\x12\x11.StartAnalyzerReq\x1a\x11.StartAnalyzerRes\"\x00\x12+\n\tGetStatus\x12\r.GetStatusReq\x1a\r.GetStatusRes\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0e\x61nalyzer.proto\x12\x16\x64\x61k_keyword_worker.svc\"\x12\n\x10StartAnalyzerReq\"\"\n\x10StartAnalyzerRes\x12\x0e\n\x06status\x18\x01 \x01(\t\"\x0e\n\x0cGetStatusReq\".\n\x0cGetStatusRes\x12\x0f\n\x07\x63urrent\x18\x01 \x01(\x05\x12\r\n\x05total\x18\x02 \x01(\x05\x32\xcc\x01\n\x08\x41nalyzer\x12\x65\n\rStartAnalyzer\x12(.dak_keyword_worker.svc.StartAnalyzerReq\x1a(.dak_keyword_worker.svc.StartAnalyzerRes\"\x00\x12Y\n\tGetStatus\x12$.dak_keyword_worker.svc.GetStatusReq\x1a$.dak_keyword_worker.svc.GetStatusRes\"\x00\x42\x39Z7github.com/aglide100/dak-keyword-twitter-scraper/pb/svcb\x06proto3')
 
 
 
@@ -25,28 +25,28 @@ _GETSTATUSRES = DESCRIPTOR.message_types_by_name['GetStatusRes']
 StartAnalyzerReq = _reflection.GeneratedProtocolMessageType('StartAnalyzerReq', (_message.Message,), {
   'DESCRIPTOR' : _STARTANALYZERREQ,
   '__module__' : 'analyzer_pb2'
-  # @@protoc_insertion_point(class_scope:StartAnalyzerReq)
+  # @@protoc_insertion_point(class_scope:dak_keyword_worker.svc.StartAnalyzerReq)
   })
 _sym_db.RegisterMessage(StartAnalyzerReq)
 
 StartAnalyzerRes = _reflection.GeneratedProtocolMessageType('StartAnalyzerRes', (_message.Message,), {
   'DESCRIPTOR' : _STARTANALYZERRES,
   '__module__' : 'analyzer_pb2'
-  # @@protoc_insertion_point(class_scope:StartAnalyzerRes)
+  # @@protoc_insertion_point(class_scope:dak_keyword_worker.svc.StartAnalyzerRes)
   })
 _sym_db.RegisterMessage(StartAnalyzerRes)
 
 GetStatusReq = _reflection.GeneratedProtocolMessageType('GetStatusReq', (_message.Message,), {
   'DESCRIPTOR' : _GETSTATUSREQ,
   '__module__' : 'analyzer_pb2'
-  # @@protoc_insertion_point(class_scope:GetStatusReq)
+  # @@protoc_insertion_point(class_scope:dak_keyword_worker.svc.GetStatusReq)
   })
 _sym_db.RegisterMessage(GetStatusReq)
 
 GetStatusRes = _reflection.GeneratedProtocolMessageType('GetStatusRes', (_message.Message,), {
   'DESCRIPTOR' : _GETSTATUSRES,
   '__module__' : 'analyzer_pb2'
-  # @@protoc_insertion_point(class_scope:GetStatusRes)
+  # @@protoc_insertion_point(class_scope:dak_keyword_worker.svc.GetStatusRes)
   })
 _sym_db.RegisterMessage(GetStatusRes)
 
@@ -54,14 +54,15 @@ _ANALYZER = DESCRIPTOR.services_by_name['Analyzer']
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _STARTANALYZERREQ._serialized_start=18
-  _STARTANALYZERREQ._serialized_end=36
-  _STARTANALYZERRES._serialized_start=38
-  _STARTANALYZERRES._serialized_end=56
-  _GETSTATUSREQ._serialized_start=58
-  _GETSTATUSREQ._serialized_end=72
-  _GETSTATUSRES._serialized_start=74
-  _GETSTATUSRES._serialized_end=104
-  _ANALYZER._serialized_start=106
-  _ANALYZER._serialized_end=218
+  DESCRIPTOR._serialized_options = b'Z7github.com/aglide100/dak-keyword-twitter-scraper/pb/svc'
+  _STARTANALYZERREQ._serialized_start=42
+  _STARTANALYZERREQ._serialized_end=60
+  _STARTANALYZERRES._serialized_start=62
+  _STARTANALYZERRES._serialized_end=96
+  _GETSTATUSREQ._serialized_start=98
+  _GETSTATUSREQ._serialized_end=112
+  _GETSTATUSRES._serialized_start=114
+  _GETSTATUSRES._serialized_end=160
+  _ANALYZER._serialized_start=163
+  _ANALYZER._serialized_end=367
 # @@protoc_insertion_point(module_scope)

@@ -13,14 +13,15 @@ class AnalyzerServicer(analyzer_pb2_grpc.AnalyzerServicer):
         
         RunAnalyzerTest()
         return analyzer_pb2.StartAnalyzerRes(
-
+            status="start"
         )
 
     def GetStatus(self, request, context):
         print("GetStatus called!")
 
         return analyzer_pb2.GetStatusRes(
-            status=f"current : {current}, total: {total}"
+            current=current,
+            total=total
         )
 
 

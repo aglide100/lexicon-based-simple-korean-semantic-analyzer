@@ -15,12 +15,12 @@ class AnalyzerStub(object):
             channel: A grpc.Channel.
         """
         self.StartAnalyzer = channel.unary_unary(
-                '/Analyzer/StartAnalyzer',
+                '/dak_keyword_worker.svc.Analyzer/StartAnalyzer',
                 request_serializer=analyzer__pb2.StartAnalyzerReq.SerializeToString,
                 response_deserializer=analyzer__pb2.StartAnalyzerRes.FromString,
                 )
         self.GetStatus = channel.unary_unary(
-                '/Analyzer/GetStatus',
+                '/dak_keyword_worker.svc.Analyzer/GetStatus',
                 request_serializer=analyzer__pb2.GetStatusReq.SerializeToString,
                 response_deserializer=analyzer__pb2.GetStatusRes.FromString,
                 )
@@ -56,7 +56,7 @@ def add_AnalyzerServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'Analyzer', rpc_method_handlers)
+            'dak_keyword_worker.svc.Analyzer', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -75,7 +75,7 @@ class Analyzer(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Analyzer/StartAnalyzer',
+        return grpc.experimental.unary_unary(request, target, '/dak_keyword_worker.svc.Analyzer/StartAnalyzer',
             analyzer__pb2.StartAnalyzerReq.SerializeToString,
             analyzer__pb2.StartAnalyzerRes.FromString,
             options, channel_credentials,
@@ -92,7 +92,7 @@ class Analyzer(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Analyzer/GetStatus',
+        return grpc.experimental.unary_unary(request, target, '/dak_keyword_worker.svc.Analyzer/GetStatus',
             analyzer__pb2.GetStatusReq.SerializeToString,
             analyzer__pb2.GetStatusRes.FromString,
             options, channel_credentials,
