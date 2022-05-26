@@ -10,6 +10,7 @@ import analyzer_pb2, analyzer_pb2_grpc
 class AnalyzerServicer(analyzer_pb2_grpc.AnalyzerServicer):
     def StartAnalyzer(self, request, context):
         print("StartAnalyzer called!")
+        
         RunAnalyzerTest()
         return analyzer_pb2.StartAnalyzerRes(
 
@@ -19,7 +20,7 @@ class AnalyzerServicer(analyzer_pb2_grpc.AnalyzerServicer):
         print("GetStatus called!")
 
         return analyzer_pb2.GetStatusRes(
-            status=f"wip"
+            status=f"current : {current}, total: {total}"
         )
 
 
@@ -32,10 +33,18 @@ def RunAnalyzerTest():
     # scores = dataSet.drop(["text"], axis=1)
     dictionary = pd.read_csv('lexicon/polarity.csv')
 
+    global total
+    global current
+    current = 0
+    total = 0
+
+    total = dataSet.shape[0]
     result = pd.DataFrame({})
 
     for idx, row in data.itertuples():
         score = Analyzer.analyze_word(row, dictionary)
+        
+        current += 1
         if result.empty:
             result = score
         else:

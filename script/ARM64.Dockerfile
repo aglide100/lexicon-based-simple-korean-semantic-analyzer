@@ -14,6 +14,8 @@ RUN apt-get update && apt-get install -y g++ gcc default-jdk git
 RUN python3 -m pip install --upgrade pip && \
     pip install pip-tools  && \
     pip install -r requirements.txt
+
+RUN pip install tensorflow-aarch64
     
 #RUN pip install git+https://github.com/ssut/py-hanspell.git 
 
