@@ -7,6 +7,7 @@ import re
 import emoji
 import logging
 import sys
+from iteration_utilities import deepflatten
 from hanspell import spell_checker
 #from pykospacing import Spacing
 # import twitter_korean
@@ -21,10 +22,11 @@ def calc_score(textPosed, dictionary, scores):
     temp = ""
     #result
     for idx, chunk in enumerate(textPosed):
+        print(chunk)
         if chunk.startswith(":") and chunk.endswith(":"):
               try:
                   out = get_emoji_sentiment_rank(emoji.emojize(chunk))
-                  
+                  print(out)
                   scores['POS'] += out["positive"] / out["occurrences"]
                   scores['NEG'] += out["negative"] / out["occurrences"]
                   scores['NEUT'] += out["neutral"] / out["occurrences"]
@@ -68,13 +70,11 @@ def calc_score(textPosed, dictionary, scores):
                     result = dictionary.loc[(dictionary['ngram'] == temp + ";")]
                     temp = ""
             
-
             if result.empty:
                 pass
             else:
                 scores[result.iloc[0]['max.value']] += result.iloc[0]['max.prop']
 
-        
     return scores
 
 class Analyzer:
@@ -105,8 +105,16 @@ class Analyzer:
         # text = text.replace('\n',' ')
         # return text
         only_BMP_pattern = re.compile("[" + u"\U00010000-\U0010FFFF" + "]+", flags=re.UNICODE)
+        onlyKorean = re.compile('[^ \u3131-\u3163\uac00-\ud7a3]+') 
+        BMP_list = only_BMP_pattern.findall(text)
+        
+        only_BMP_list= list(deepflatten(BMP_list))
+        # for value in BMP_list:
+        #     print("######", value)
+        #     print("___", list(value))
+        #     only_BMP_list.append(list(value))
 
-        return only_BMP_pattern.sub(r'', text), only_BMP_pattern.findall(text)
+        return onlyKorean.sub('', text), only_BMP_list
 
     
     #@jit
@@ -134,14 +142,17 @@ class Analyzer:
         
         analyzed_words = []
         preprocessed, only_BMP_pattern = Analyzer.preprocessing(sentences)
+        if len(preprocessed) == 0:
+            pass
+        else:
+            result = m.pos(preprocessed)
+            for value in result:
+                analyzed_words.append(value[0]+"/"+value[1])
 
-        result = m.pos(preprocessed)
-
-        for value in result:
-            analyzed_words.append(value[0]+"/"+value[1])
-        
-        for value in only_BMP_pattern:
-            analyzed_words.append(emoji.demojize(value))
+            for i in range(len(only_BMP_pattern)):
+                print("########bmp",only_BMP_pattern[i])
+                analyzed_words.append(emoji.demojize(only_BMP_pattern[i]))
+            
 
         return analyzed_words
     
