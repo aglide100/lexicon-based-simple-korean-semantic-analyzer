@@ -6,6 +6,6 @@ emosent-py
 emoji
 Cython
 iteration-utilities
-grpc
+grpcio
 #numba
 #twitter-korean

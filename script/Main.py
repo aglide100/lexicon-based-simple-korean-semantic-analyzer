@@ -1,11 +1,7 @@
 from concurrent import futures
-
 import grpc
 from Servicer import AnalyzerServicer
 import analyzer_pb2_grpc
-#from pb import analyzer_pb2_grpc
-#from pb import analyzer_pb2, analyzer_pb2_grpc
-#import pb.command_pb2_grpc
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=2))
@@ -15,6 +11,6 @@ def serve():
     server.wait_for_termination()
 
 if __name__ == "__main__":
-    print("Testing!")
+    print("Start GRPC server!")
     serve()
 

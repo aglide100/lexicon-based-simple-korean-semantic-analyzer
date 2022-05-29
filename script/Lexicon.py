@@ -22,11 +22,9 @@ def calc_score(textPosed, dictionary, scores):
     temp = ""
     #result
     for idx, chunk in enumerate(textPosed):
-        print(chunk)
         if chunk.startswith(":") and chunk.endswith(":"):
               try:
                   out = get_emoji_sentiment_rank(emoji.emojize(chunk))
-                  print(out)
                   scores['POS'] += out["positive"] / out["occurrences"]
                   scores['NEG'] += out["negative"] / out["occurrences"]
                   scores['NEUT'] += out["neutral"] / out["occurrences"]
@@ -150,7 +148,6 @@ class Analyzer:
                 analyzed_words.append(value[0]+"/"+value[1])
 
             for i in range(len(only_BMP_pattern)):
-                print("########bmp",only_BMP_pattern[i])
                 analyzed_words.append(emoji.demojize(only_BMP_pattern[i]))
             
 
