@@ -8,5 +8,6 @@ Cython
 iteration-utilities
 grpcio
 grpcio-tools
+psycopg2-binary
 #numba
 #twitter-korean
