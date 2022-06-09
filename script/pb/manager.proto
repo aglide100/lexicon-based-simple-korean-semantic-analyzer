@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package pb.svc.manager;
+option go_package = "github.com/aglide100/dak-keyword/pb/svc/manager";
+
+service Manager {
+    rpc CreateNewJob(CreateNewJobReq) returns (CreateNewJobRes);
+    rpc GetJobStatus(GetJobStatusReq) returns (GetJobStatusRes);
+    rpc DoneScraper(DoneScraperReq) returns (DoneScraperRes);
+    rpc DoneAnalyzer(DoneAnalyzerReq) returns (DoneAnalyzerRes);
+    rpc StopJob(StopJobReq) returns (StopJobRes);
+}
+
+message CreateNewJobReq {
+    string keyword = 1;
+    string owner = 2;
+}
+
+message CreateNewJobRes {
+    repeated string keyword = 1;
+    repeated string workerId = 2;
+    string jobId = 3;
+}
+
+message GetJobStatusReq {
+    string id = 1;
+    string owner = 2;
+}
+
+message GetJobStatusRes {
+    string status = 1;
+}
+
+message StopJobReq {
+    string id = 1;
+}
+
+message StopJobRes {
+    string status = 1;
+}
+
+message DoneScraperReq {
+    string id = 1;
+}
+
+message DoneScraperRes {
+    string status = 1;
+}
+
+message DoneAnalyzerReq {
+    string id = 1;
+}
+
+message DoneAnalyzerRes {
+    string status = 1;
+}
