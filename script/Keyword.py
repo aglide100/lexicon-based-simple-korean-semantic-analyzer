@@ -24,8 +24,8 @@ password = os.environ['DB_PASSWORD']
 port = os.environ['DB_PORT']
 worerId = os.environ['WORKER_ID']
 
-def callGRPCDone():
-    with grpc.insecure_channel("keyword_manager:50010") as channel:
+def sendDoneMSG():
+    with grpc.insecure_channel("keyword_apid:50010") as channel:
 
         client = manager_pb2_grpc.ManagerStub(channel)
         response = client.DoneAnalyzer(manager_pb2.DoneAnalyzerReq(id=worerId))
@@ -45,5 +45,5 @@ if __name__ == '__main__':
         score = Analyzer.analyze_word(value[0], dictionary)
         Database.CRUD.updateScore(db, score['pos'].values[0], score['neg'].values[0], score['neut'].values[0], score['comp'].values[0], score['none'].values[0], score['max'].name, score[score['max'].name].values[0], value[13])
 
-    callGRPCDone()
+    sendDoneMSG()
 
