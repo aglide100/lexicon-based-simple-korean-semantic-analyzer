@@ -28,7 +28,7 @@ def callGRPCDone():
     with grpc.insecure_channel("keyword_manager:50010") as channel:
 
         client = manager_pb2_grpc.ManagerStub(channel)
-        response = client.DoneAnalyzer(manager_pb2.DoneAnalyzerReq(Id=worerId))
+        response = client.DoneAnalyzer(manager_pb2.DoneAnalyzerReq(id=worerId))
         print(response)
 
 try:
