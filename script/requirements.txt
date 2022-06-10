@@ -9,5 +9,6 @@ iteration-utilities
 grpcio
 grpcio-tools
 psycopg2-binary
+protobuf==3.20.1
 #numba
 #twitter-korean
