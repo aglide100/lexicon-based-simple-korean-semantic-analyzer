@@ -65,7 +65,7 @@ class CRUD(Databases):
         " \"Score_max_name\" "
         " = '{Score_max_name}'"
         " WHERE "
-        " \"Id\""
+        " \"Worker_id\""
         " = '{Id}'"
         ).format(Score_neg = Score_neg, Score_pos = Score_pos, Score_neut = Score_neut, Score_comp = Score_comp, Score_none = Score_none, Score_max_value = Score_max_value, Score_max_name = Score_max_name, Id = Id)
         

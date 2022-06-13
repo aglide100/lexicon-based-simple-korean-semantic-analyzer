@@ -31,7 +31,6 @@ def sendDoneMSG():
         response = client.DoneAnalyzer(manager_pb2.DoneAnalyzerReq(id=worerId))
         print(response)
 
-
 try:
     db = Database.Databases(host, dbname, user, password, port)
 except psycopg2.DatabaseError as db_err:
