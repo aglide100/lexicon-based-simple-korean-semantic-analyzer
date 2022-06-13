@@ -31,6 +31,7 @@ def sendDoneMSG():
         response = client.DoneAnalyzer(manager_pb2.DoneAnalyzerReq(id=worerId))
         print(response)
 
+
 try:
     db = Database.Databases(host, dbname, user, password, port)
 except psycopg2.DatabaseError as db_err:
@@ -46,4 +47,3 @@ if __name__ == '__main__':
         Database.CRUD.updateScore(db, score['pos'].values[0], score['neg'].values[0], score['neut'].values[0], score['comp'].values[0], score['none'].values[0], score['max'].name, score[score['max'].name].values[0], value[13])
 
     sendDoneMSG()
-
