@@ -45,6 +45,7 @@ class CRUD(Databases):
         except Exception as e :
             result = ("Read DB err : ", e)
 
+        print(result)
         return result
 
     def updateScore(self, Score_pos, Score_neg, Score_neut, Score_comp, Score_none, Score_max_value, Score_max_name, Id):
