@@ -25,11 +25,19 @@ port = os.environ['DB_PORT']
 worerId = os.environ['WORKER_ID']
 
 def sendDoneMSG():
-    with grpc.insecure_channel("keyword_apid:50010") as channel:
+    with open('/keys/server.crt', 'rb') as f:
+        trusted_certs = grpc.ssl_channel_credentials(f.read())
 
-        client = manager_pb2_grpc.ManagerStub(channel)
-        response = client.DoneAnalyzer(manager_pb2.DoneAnalyzerReq(id=worerId))
-        print(response)
+    channel = grpc.secure_channel('keyword_apid:50010', trusted_certs)
+    client = manager_pb2_grpc.ManagerStub(channel)
+    response = client.DoneAnalyzer(manager_pb2.DoneAnalyzerReq(id=worerId))
+    print(response)
+
+    #with grpc.insecure_channel("keyword_apid:50010") as channel:
+#
+    #    client = manager_pb2_grpc.ManagerStub(channel)
+    #    response = client.DoneAnalyzer(manager_pb2.DoneAnalyzerReq(id=worerId))
+    #    print(response)
 
 try:
     db = Database.Databases(host, dbname, user, password, port)
