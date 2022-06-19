@@ -48,7 +48,7 @@ class CRUD(Databases):
         print(result)
         return result
 
-    def updateScore(self, Score_pos, Score_neg, Score_neut, Score_comp, Score_none, Score_max_value, Score_max_name, Id):
+    def updateScore(self, Score_pos, Score_neg, Score_neut, Score_comp, Score_none, Score_max_value, Score_max_name, Id, articleId):
         sql = ("UPDATE \"article\"" 
         " SET "
         " \"Score_pos\" "
@@ -67,8 +67,10 @@ class CRUD(Databases):
         " = '{Score_max_name}'"
         " WHERE "
         " \"Worker_id\""
-        " = '{Id}'"
-        ).format(Score_neg = Score_neg, Score_pos = Score_pos, Score_neut = Score_neut, Score_comp = Score_comp, Score_none = Score_none, Score_max_value = Score_max_value, Score_max_name = Score_max_name, Id = Id)
+        " = '{Id}' AND " 
+        " \"Id\""
+        " = '{articleId}"
+        ).format(Score_neg = Score_neg, Score_pos = Score_pos, Score_neut = Score_neut, Score_comp = Score_comp, Score_none = Score_none, Score_max_value = Score_max_value, Score_max_name = Score_max_name, Id = Id, articleId = articleId)
         
         try :
             self.cursor.execute(sql)
