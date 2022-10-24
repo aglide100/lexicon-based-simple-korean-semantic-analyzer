@@ -1,7 +1,7 @@
 import logging 
 import pandas as pd
-# from konlpy.tag import Mecab
-from konlpy.tag import Kkma
+from konlpy.tag import Mecab
+#from konlpy.tag import Kkma
 from emosent import *
 import re
 import emoji
@@ -98,9 +98,9 @@ class Analyzer:
         return text
 
     def preprocessing(text):
-        # text = ' '.join(text.split())
-        # text = re.sub('[#]+[0-9a-zA-Z_]+', ' ', text)
-        # text = text.replace('\n',' ')
+        text = ' '.join(text.split())
+        text = re.sub('[#]+[0-9a-zA-Z_]+', ' ', text)
+        text = text.replace('\n',' ')
         # return text
         only_BMP_pattern = re.compile("[" + u"\U00010000-\U0010FFFF" + "]+", flags=re.UNICODE)
         onlyKorean = re.compile('[^ \u3131-\u3163\uac00-\ud7a3]+') 
@@ -134,12 +134,9 @@ class Analyzer:
         return scores
 
     def analyze_sentences_into_chunks(sentences, m):
-        #m = Kkma()
-        #o = Okt()
-        # m = Mecab()
-        
         analyzed_words = []
         preprocessed, only_BMP_pattern = Analyzer.preprocessing(sentences)
+
         if len(preprocessed) == 0:
             pass
         else:
@@ -154,7 +151,9 @@ class Analyzer:
         return analyzed_words
     
     def analyze_word(row, dictionary):
-        m = Kkma()
+        #o = Okt()
+        m = Mecab()
+        # m = Kkma()
         start = time.time()
 
         word_chunks = Analyzer.analyze_sentences_into_chunks(Analyzer.remove_unnecessary_word(row), m)

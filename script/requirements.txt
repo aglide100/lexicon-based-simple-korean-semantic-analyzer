@@ -1,5 +1,5 @@
 JPype1
-konlpy==0.5.2
+konlpy==0.6.0
 tweepy==3.10.0
 pandas
 emosent-py
