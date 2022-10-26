@@ -160,15 +160,17 @@ class Analyzer:
         #o = Okt()
         # m = Mecab()
         m = Kkma()
-        start = time.time()
-
-        word_chunks = Analyzer.analyze_sentences_into_chunks(Analyzer.remove_unnecessary_word(row), m)
+        # start = time.time()
+        try:
+            word_chunks = Analyzer.analyze_sentences_into_chunks(Analyzer.remove_unnecessary_word(row), m)
+        except:
+            return
         
         categorized_scores = Analyzer.get_score_from_chunks(word_chunks, dictionary)
         
-        Analyzer.get_logger().info(f"-------------------------------------------------\nsentence: {row}\n\nsocre: {categorized_scores}")
+        # Analyzer.get_logger().info(f"-------------------------------------------------\nsentence: {row}\n\nsocre: {categorized_scores}")
        
-        Analyzer.get_logger().info(f"점수 계산 시간 {time.time() - start}")
+        # Analyzer.get_logger().info(f"점수 계산 시간 {time.time() - start}")
         result = pd.DataFrame({'text': row, 'pos': categorized_scores['POS'], 'neg': categorized_scores['NEG'], 'neut': categorized_scores['NEUT'], 'comp': categorized_scores['COMP'], 'none': categorized_scores['None'], 'max': max(categorized_scores, key=categorized_scores.get)}, index=['text'])
         return result
 
