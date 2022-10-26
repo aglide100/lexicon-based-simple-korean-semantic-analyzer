@@ -20,7 +20,7 @@ RUN pip install git+https://github.com/ssut/py-hanspell.git
 # RUN cd / && \
 #     curl -s https://raw.githubusercontent.com/konlpy/konlpy/master/scripts/mecab.sh | bash -s
 
-#RUN pip install git+https://github.com/haven-jeon/PyKoSpacing.git 
+RUN pip install git+https://github.com/haven-jeon/PyKoSpacing.git 
 
 #RUN pip install git+https://github.com/cedar101/twitter-korean-py.git
 

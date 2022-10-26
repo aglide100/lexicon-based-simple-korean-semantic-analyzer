@@ -1,4 +1,5 @@
-import logging 
+import logging
+from numpy import spacing 
 import pandas as pd
 # from konlpy.tag import Mecab
 from konlpy.tag import Kkma
@@ -9,7 +10,7 @@ import logging
 import sys
 from iteration_utilities import deepflatten
 from hanspell import spell_checker
-#from pykospacing import Spacing
+from pykospacing import Spacing
 # import twitter_korean
 import time
 #from numba import jit
@@ -91,10 +92,16 @@ class Analyzer:
 
         text.replace(" " , "")
 
-        spelled_sent = spell_checker.check(text)
-        hanspell_sent = spelled_sent.checked
-        text = hanspell_sent
-        
+        spelled_sent = ""
+        try:
+            spelled_sent = spell_checker.check(text)
+            hanspell_sent = spelled_sent.checked
+            text = hanspell_sent
+        except:
+            print("hanspell error, using spacing")
+            spacing = Spacing()
+            text = spacing(text)
+
         return text
 
     def preprocessing(text):
