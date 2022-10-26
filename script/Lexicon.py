@@ -10,7 +10,7 @@ import logging
 import sys
 from iteration_utilities import deepflatten
 from hanspell import spell_checker
-from pykospacing import Spacing
+# from pykospacing import Spacing
 # import twitter_korean
 import time
 #from numba import jit
@@ -84,7 +84,7 @@ class Analyzer:
         text = re.sub(r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", ' ', str(text)) # http로 시작되는 url
         text = re.sub(r"[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{2,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)", ' ', str(text)) # http로 시작되지 않는 url
         
-        text = text.rstrip().lstrip()
+        # text = text.rstrip().lstrip()
         
         #spacing = Spacing()
         #text = spacing(text) 
@@ -94,13 +94,11 @@ class Analyzer:
 
         spelled_sent = ""
         try:
-            spelled_sent = spell_checker.check(text)
+            spelled_sent = spell_checker.check(text.rstrip().lstrip())
             hanspell_sent = spelled_sent.checked
             text = hanspell_sent
         except:
-            print("hanspell error, using spacing")
-            spacing = Spacing()
-            text = spacing(text)
+            print("hanspell error")
 
         return text
 
