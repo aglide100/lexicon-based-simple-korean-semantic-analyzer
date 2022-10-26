@@ -5,6 +5,7 @@ pandas
 emosent-py
 emoji
 Cython
+lxml
 iteration-utilities
 grpcio
 grpcio-tools

@@ -9,7 +9,7 @@ VOLUME /data
 
 ENV JAVA_HOME /usr/lib/jvm/java-1.7-openjdk/jre
 
-RUN apt-get update && apt-get install -y g++ gcc default-jdk git curl python3-setuptools make
+RUN apt-get update && apt-get install -y g++ gcc default-jdk git curl python3-setuptools make libpq-dev libxml2-dev libxslt-dev python3-dev musl-dev
 
 RUN python3 -m pip install --upgrade pip && \
     pip install pip-tools  && \
@@ -17,8 +17,8 @@ RUN python3 -m pip install --upgrade pip && \
     
 RUN pip install git+https://github.com/ssut/py-hanspell.git 
 
-RUN cd / && \
-    curl -s https://raw.githubusercontent.com/konlpy/konlpy/master/scripts/mecab.sh | bash -s
+# RUN cd / && \
+#     curl -s https://raw.githubusercontent.com/konlpy/konlpy/master/scripts/mecab.sh | bash -s
 
 #RUN pip install git+https://github.com/haven-jeon/PyKoSpacing.git 
 

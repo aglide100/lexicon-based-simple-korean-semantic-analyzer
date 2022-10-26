@@ -1,7 +1,7 @@
 import logging 
 import pandas as pd
-from konlpy.tag import Mecab
-#from konlpy.tag import Kkma
+# from konlpy.tag import Mecab
+from konlpy.tag import Kkma
 from emosent import *
 import re
 import emoji
@@ -100,7 +100,8 @@ class Analyzer:
     def preprocessing(text):
         text = ' '.join(text.split())
         text = re.sub('[#]+[0-9a-zA-Z_]+', ' ', text)
-        text = text.replace('\n',' ')
+        text = text.replace('\n'," ")
+        text = text.replace('\t'," ")
         # return text
         only_BMP_pattern = re.compile("[" + u"\U00010000-\U0010FFFF" + "]+", flags=re.UNICODE)
         onlyKorean = re.compile('[^ \u3131-\u3163\uac00-\ud7a3]+') 
@@ -152,8 +153,8 @@ class Analyzer:
     
     def analyze_word(row, dictionary):
         #o = Okt()
-        m = Mecab()
-        # m = Kkma()
+        # m = Mecab()
+        m = Kkma()
         start = time.time()
 
         word_chunks = Analyzer.analyze_sentences_into_chunks(Analyzer.remove_unnecessary_word(row), m)
