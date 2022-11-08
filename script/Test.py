@@ -2,26 +2,35 @@
 import pandas as pd
 from Lexicon import Analyzer
 import time
+import sys
 
 #data = pd.read_csv("./db/data.csv", sep="\t")
 start = time.time()
 
-dataSet = pd.read_csv("./db/movie_review.csv")
+check = sys.argv[0]
 
-data = dataSet.drop(["score"], axis=1)
+if check == "long":
+    dataSet = pd.read_csv("./db/movie_review_long.csv")
+    print("Start long")
+else:
+    dataSet = pd.read_csv("./db/movie_review_short.csv")
+    print("Start short")
+
+# data = dataSet.drop(["score"], axis=1)
 # scores = dataSet.drop(["text"], axis=1)
 dictionary = pd.read_csv('lexicon/polarity.csv')
 
 result = pd.DataFrame({})
 
-for idx, row in data.itertuples():
-    score = Analyzer.analyze_word(row, dictionary)
+
+for row in dataSet.itertuples():
+    # print(row.score)
+    score = Analyzer.analyze_word(row.text, dictionary)
+    print(score)
     if result.empty:
         result = score
     else:
         result = pd.concat([result, score], axis = 0)
-    # insert_to_frame = pd.DataFrame(data=score)
-    # result.append(score, ignore_index=True)
 
 success = 0
 fail = 0
@@ -64,3 +73,4 @@ print("correct", success)
 print("fail", fail)
 
 print("소요시간 :", time.time() - start) 
+print("정확도 :", success/(success+fail))

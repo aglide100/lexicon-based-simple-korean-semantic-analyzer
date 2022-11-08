@@ -13,12 +13,13 @@ from hanspell import spell_checker
 # from pykospacing import Spacing
 # import twitter_korean
 import time
-#from numba import jit
+from numba import jit
 
+@jit(cache=True)
 def emoji_sentiment(text):
     return get_emoji_sentiment_rank(text)["sentiment_score"]
 
-#@jit(cache=True)
+
 def calc_score(textPosed, dictionary, scores):
     temp = ""
     #result
@@ -121,7 +122,6 @@ class Analyzer:
         return onlyKorean.sub('', text), only_BMP_list
 
     
-    #@jit
     def get_score_from_chunks(chunks, lexicons):
         scores = {'POS': 0, 'NEG': 0, 'NEUT': 0, 'COMP': 0, 'None': 0}
         scores = calc_score(chunks, lexicons, scores)
