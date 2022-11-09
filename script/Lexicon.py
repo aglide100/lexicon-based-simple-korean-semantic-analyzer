@@ -15,7 +15,6 @@ from hanspell import spell_checker
 import time
 from numba import jit
 
-@jit(cache=True)
 def emoji_sentiment(text):
     return get_emoji_sentiment_rank(text)["sentiment_score"]
 
